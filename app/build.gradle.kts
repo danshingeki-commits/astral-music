@@ -32,33 +32,24 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
-        // LastFM API keys from GitHub Secrets
-//        val lastFmKey = localProperties.getProperty("LASTFM_API_KEY") ?: System.getenv("LASTFM_API_KEY") ?: ""
-//        val lastFmSecret = localProperties.getProperty("LASTFM_SECRET") ?: System.getenv("LASTFM_SECRET") ?: ""
-        
         val lastFmKey = "694cbaa17c78202a133eac4656dff651"
         val lastFmSecret = "a0fdaf6060f19128c4a84f297c71e627"
 
         buildConfigField("String", "LASTFM_API_KEY", "\"$lastFmKey\"")
         buildConfigField("String", "LASTFM_SECRET", "\"$lastFmSecret\"")
 
-
-
-//add nightly build label support
         val isNightly = project.hasProperty("nightly") && project.property("nightly") == "true"
         buildConfigField("Boolean", "IS_NIGHTLY", isNightly.toString())
     }
 
     flavorDimensions += listOf("abi", "variant")
     productFlavors {
-        // FOSS variant (default) - F-Droid compatible, no Google Play Services
         create("foss") {
             dimension = "variant"
             isDefault = true
             buildConfigField("Boolean", "CAST_AVAILABLE", "false")
         }
 
-        // GMS variant - with Google Cast support (requires Google Play Services)
         create("gms") {
             dimension = "variant"
             buildConfigField("Boolean", "CAST_AVAILABLE", "true")
@@ -86,48 +77,31 @@ android {
         }
     }
 
-   signingConfigs {
-    create("persistentDebug") {
-        storeFile = file("persistent-debug.keystore")
-        storePassword = "android"
-        keyAlias = "androiddebugkey"
-        keyPassword = "android"
-    }
-    create("release") {
-        val keystoreFile = file("keystore/release.keystore")
-        if (keystoreFile.exists()) {
-            storeFile = keystoreFile
-            storePassword = System.getenv("STORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+    signingConfigs {
+        create("persistentDebug") {
+            storeFile = file("persistent-debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+        create("release") {
+            val keystoreFile = file("keystore/release.keystore")
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = System.getenv("STORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+        }
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storePassword = "android"
+            storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
         }
     }
-    getByName("debug") {
-        keyAlias = "androiddebugkey"
-        keyPassword = "android"
-        storePassword = "android"
-        storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
-    }
-}
 
-buildTypes {
-    release {
-        signingConfig = if (file("keystore/release.keystore").exists())
-            signingConfigs.getByName("release")
-        else
-            signingConfigs.getByName("debug")
-        isMinifyEnabled = true
-        isShrinkResources = true
-        isCrunchPngs = false
-        isDebuggable = false        debug {
-            applicationIdSuffix = ".debug"
-            isDebuggable = true
-            signingConfig = signingConfigs.getByName("debug")
-            buildConfigField("String", "ARCHITECTURE", "\"debug\"")
-            resValue("string", "app_name", "Astral Music")
-        }
-
-                    buildTypes {
+    buildTypes {
         release {
             signingConfig = if (file("keystore/release.keystore").exists()) {
                 signingConfigs.getByName("release")
@@ -152,8 +126,6 @@ buildTypes {
             resValue("string", "app_name", "Astral Music")
         }
     }
-
-}
 
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
@@ -317,24 +289,6 @@ dependencies {
     implementation(libs.innertubex)
     implementation(libs.expressivelab)
 
-
-
-
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.json)
-
-    // Protobuf for message serialization (lite version for Android)
-    implementation(libs.protobuf.javalite)
-    implementation(libs.protobuf.kotlin.lite)
-
-    coreLibraryDesugaring(libs.desugaring)
-    implementation(libs.timber)
-    implementation(libs.smoothCorner)
-    implementation(libs.lottie.compose)
-    implementation(libs.haze)
-    implementation(libs.work.runtime.ktx)
-    implementation(libs.androidx.core.splashscreen)
-}
-
+    implementation(libs.ktor.client.content.
