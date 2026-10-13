@@ -119,18 +119,23 @@ buildTypes {
         isMinifyEnabled = true
         isShrinkResources = true
         isCrunchPngs = false
-        isDebuggable = false
-        proguardFiles(
-            getDefaultProguardFile("proguard-android-optimize.txt"),
-            "proguard-rules.pro"
-        )
-        buildConfigField("String", "ARCHITECTURE", "\"release\"")
-    }
-    debug {
-        applicationIdSuffix = ".debug"
-        isDebuggable = true
-        signingConfig = signingConfigs.getByName("debug")
-        buildConfigField("String", "ARCHITECTURE", "\"debug\"")
+        isDebuggable = false        debug {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
+            buildConfigField("String", "ARCHITECTURE", "\"debug\"")
+            resValue("string", "app_name", "Astral Music")
+        }
+
+                debug {
+            applicationIdSuffix = ".debug"
+            isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
+            buildConfigField("String", "ARCHITECTURE", "\"debug\"")
+            resValue("string", "app_name", "Astral Music")
+        }
+
+    
     }
 }
 
