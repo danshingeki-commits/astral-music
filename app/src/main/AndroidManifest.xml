@@ -23,9 +23,10 @@
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
 
 
-    <!-- Storage permissions for auto backup to Downloads/vivimusic/ -->
+    <!-- Legacy storage permissions for older Android versions; READ_MEDIA_AUDIO is limited to music/audio on Android 13+. -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <!-- Android TV -->
     <uses-feature android:name="android.software.leanback" android:required="false" />
