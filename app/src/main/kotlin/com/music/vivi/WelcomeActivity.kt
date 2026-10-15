@@ -393,7 +393,7 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                         onClick = {},
                         label = {
                             Text(
-                                text = "By vividh p ashokan",
+                                text = "Astral • Liquid Glass",
                                 fontFamily = GoogleSansFlex
                             )
                         },
@@ -582,27 +582,6 @@ fun WelcomePagerScreen(onFinished: () -> Unit) {
                             .fillMaxWidth()
                             .verticalScroll(rememberScrollState())
                     ) {
-                        PermissionCard(
-                            icon = painterResource(id = R.drawable.star),
-                            iconColor = Color(0xFFfff1a8),
-                            iconTint = Color(0xFF8d6e00),
-                            title = "Star on GitHub",
-                            description = "Help us reach more people by starring our repository.",
-                            shape = topCardShape,
-                            control = {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.navigate_next),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            },
-                            onClick = {
-                                uriHandler.safeOpenUri(context, "https://github.com/vivizzz007/vivi-music")
-                            }
-                        )
-
-                        Spacer(modifier = Modifier.height(2.dp))
-
                         PermissionCard(
                             icon = painterResource(com.music.vivi.R.drawable.telegram),
                             iconColor = Color(0xFF67d4ff),
