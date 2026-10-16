@@ -29,6 +29,7 @@ import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 
 import androidx.compose.runtime.getValue
+import com.music.vivi.constants.LiquidGlassKey
 import com.music.vivi.constants.SelectedFontKey
 import com.music.vivi.constants.CustomFontPathKey
 import com.music.vivi.constants.AppFont
@@ -49,6 +50,7 @@ fun vivimusicTheme(
     val context = LocalContext.current
     val selectedFontValue by rememberPreference(SelectedFontKey, AppFont.SYSTEM.value)
     val customFontPath by rememberPreference(CustomFontPathKey, "")
+    val liquidGlassEnabled by rememberPreference(LiquidGlassKey, false)
 
     val brandFont = remember(selectedFontValue, customFontPath) {
         when (AppFont.fromValue(selectedFontValue)) {
@@ -104,8 +106,21 @@ fun vivimusicTheme(
         }
     }
 
+    val astralColorScheme = if (liquidGlassEnabled) {
+        colorScheme.copy(
+            primary = Color(0xFFBB86FC),
+            secondary = Color(0xFF9B7BFF),
+            tertiary = Color(0xFF69D8FF),
+            background = if (darkTheme) Color(0xFF10091D) else colorScheme.background,
+            surface = if (darkTheme) Color(0xE61B1028) else colorScheme.surface,
+            surfaceVariant = if (darkTheme) Color(0xCC352044) else colorScheme.surfaceVariant,
+            surfaceTint = Color(0xFFBB86FC),
+            outlineVariant = if (darkTheme) Color(0x66D7B5FF) else colorScheme.outlineVariant
+        )
+    } else colorScheme
+
     MaterialExpressiveTheme(
-        colorScheme = colorScheme,
+        colorScheme = astralColorScheme,
         typography = typography, // Use the dynamically configured typography
         motionScheme = MotionScheme.expressive(),
         content = content

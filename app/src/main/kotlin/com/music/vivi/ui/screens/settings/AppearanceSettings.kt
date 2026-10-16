@@ -67,6 +67,7 @@ import com.music.vivi.constants.DefaultOpenTabKey
 import com.music.vivi.constants.DensityScale
 import com.music.vivi.constants.DensityScaleKey
 import com.music.vivi.constants.DynamicThemeKey
+import com.music.vivi.constants.LiquidGlassKey
 import com.music.vivi.constants.EnableDynamicIconKey
 import com.music.vivi.constants.EnableHighRefreshRateKey
 import com.music.vivi.constants.EnableLyricsThumbnailPlayPauseKey
@@ -150,6 +151,10 @@ fun AppearanceSettings(
     val (dynamicTheme, onDynamicThemeChange) = rememberPreference(
         DynamicThemeKey,
         defaultValue = true
+    )
+    val (liquidGlassEnabled, onLiquidGlassEnabledChange) = rememberPreference(
+        LiquidGlassKey,
+        defaultValue = false
     )
     val (selectedFontValue) = rememberPreference(
         SelectedFontKey,
@@ -1128,6 +1133,20 @@ fun AppearanceSettings(
 //                        onClick = { handleIconChange(!enableDynamicIcon) }
 //                    )
 //                )
+                add(
+                    Material3SettingsItem(
+                        icon = painterResource(R.drawable.layers),
+                        title = { Text("Astral Liquid Glass") },
+                        description = { Text("Violet translucent surfaces across Astral Music") },
+                        trailingContent = {
+                            Switch(
+                                checked = liquidGlassEnabled,
+                                onCheckedChange = onLiquidGlassEnabledChange
+                            )
+                        },
+                        onClick = { onLiquidGlassEnabledChange(!liquidGlassEnabled) }
+                    )
+                )
                 add(
                     Material3SettingsItem(
                         icon = painterResource(R.drawable.palette),
