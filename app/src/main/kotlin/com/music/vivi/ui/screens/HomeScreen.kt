@@ -405,7 +405,7 @@ fun DailyDiscoverCard(
                 }
             ),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.64f),
         ),
         shape = RoundedCornerShape(16.dp)
     ) {
@@ -913,7 +913,17 @@ fun HomeScreen(
         val density = LocalDensity.current
 
         BoxWithConstraints(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFF10091D),
+                            Color(0xFF171027),
+                            Color(0xFF090B12)
+                        )
+                    )
+                ),
             contentAlignment = Alignment.TopStart
         ) {
             val horizontalLazyGridItemWidthFactor = if (maxWidth * 0.475f >= 320.dp) 0.475f else 0.9f
@@ -984,7 +994,7 @@ fun HomeScreen(
                                     .fillMaxWidth()
                                     .padding(16.dp),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.64f),
                                 ),
                             ) {
                                 Box(
