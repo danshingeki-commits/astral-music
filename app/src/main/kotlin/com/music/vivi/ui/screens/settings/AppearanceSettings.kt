@@ -1135,7 +1135,7 @@ fun AppearanceSettings(
 //                )
                 add(
                     Material3SettingsItem(
-                        icon = painterResource(R.drawable.layers),
+                        icon = painterResource(R.drawable.palette),
                         title = { Text("Astral Liquid Glass") },
                         description = { Text("Violet translucent surfaces across Astral Music") },
                         trailingContent = {
