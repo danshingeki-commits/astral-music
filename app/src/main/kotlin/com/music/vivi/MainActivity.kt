@@ -56,6 +56,8 @@ import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import com.music.vivi.constants.LastSeenStarPromptVersionKey
+import com.music.vivi.constants.HasStarredRepoKey
 import com.music.vivi.ui.component.ActionPromptDialog
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.style.TextAlign
@@ -483,10 +485,85 @@ class MainActivity : ComponentActivity() {
 
         val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)
 
+        val (lastSeenStarPromptVersion, setLastSeenStarPromptVersion) = rememberPreference(LastSeenStarPromptVersionKey, "")
+        val (hasStarredRepo) = rememberPreference(HasStarredRepoKey, false)
         val uriHandler = LocalUriHandler.current
         val currentVersion = BuildConfig.VERSION_NAME
 
 
+        val isSystemInDarkTheme = isSystemInDarkTheme()
+        val useDarkTheme = remember(darkTheme, isSystemInDarkTheme) {
+            if (darkTheme == DarkMode.AUTO) isSystemInDarkTheme else darkTheme == DarkMode.ON
+        }
+
+        LaunchedEffect(useDarkTheme) {
+            setSystemBarAppearance(useDarkTheme)
+        }
+
+        val pureBlackEnabled by rememberPreference(PureBlackKey, defaultValue = false)
+        val pureBlack = remember(pureBlackEnabled, useDarkTheme) {
+            pureBlackEnabled && useDarkTheme
+        }
+
+        val (selectedThemeColorInt) = rememberPreference(SelectedThemeColorKey, defaultValue = DefaultThemeColor.toArgb())
+        val selectedThemeColor = Color(selectedThemeColorInt)
+
+        var themeColor by rememberSaveable(stateSaver = ColorSaver) {
+            mutableStateOf(selectedThemeColor)
+        }
+
+        LaunchedEffect(selectedThemeColor) {
+            if (!enableDynamicTheme) {
+                themeColor = selectedThemeColor
+            }
+        }
+
+        LaunchedEffect(playerConnection, enableDynamicTheme, selectedThemeColor) {
+            val playerConnection = playerConnection
+            if (!enableDynamicTheme || playerConnection == null) {
+                themeColor = selectedThemeColor
+                return@LaunchedEffect
+            }
+
+            playerConnection.service.currentMediaMetadata.collectLatest { song ->
+                if (song?.thumbnailUrl != null) {
+                    withContext(Dispatchers.IO) {
+                        try {
+                            val result = imageLoader.execute(
+                                ImageRequest.Builder(this@MainActivity)
+                                    .data(song.thumbnailUrl)
+                                    .allowHardware(false)
+                                    .memoryCachePolicy(CachePolicy.ENABLED)
+                                    .diskCachePolicy(CachePolicy.ENABLED)
+                                    .networkCachePolicy(CachePolicy.ENABLED)
+                                    .crossfade(false)
+                                    .build()
+                            )
+                            themeColor = result.image?.toBitmap()?.extractThemeColor() ?: selectedThemeColor
+                        } catch (e: Exception) {
+                            // Fallback to default on error
+                            themeColor = selectedThemeColor
+                        }
+                    }
+                } else {
+                    themeColor = selectedThemeColor
+                }
+            }
+        }
+
+        val gitHubViewModel: GitHubViewModel = hiltViewModel()
+        val isStarred by gitHubViewModel.isStarred.collectAsState()
+        val showThankYouDialog by gitHubViewModel.showThankYouDialog.collectAsState()
+
+        LaunchedEffect(Unit) {
+            gitHubViewModel.checkStarStatus(this@MainActivity)
+        }
+
+        vivimusicTheme(
+            darkTheme = useDarkTheme,
+            pureBlack = pureBlack,
+            themeColor = themeColor,
+        ) {
             if (showThankYouDialog) {
                 ActionPromptDialog(
                     title = "Thank You!",
