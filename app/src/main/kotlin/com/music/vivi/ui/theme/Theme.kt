@@ -37,7 +37,7 @@ import androidx.compose.ui.text.font.FontFamily
 import android.graphics.Typeface as AndroidTypeface
 import androidx.compose.ui.text.font.Typeface as ComposeTypeface
 
-val DefaultThemeColor = Color(0xFF8B5CF6)
+val DefaultThemeColor = Color(0xFF9B4DFF)
 
 @Composable
 fun vivimusicTheme(
